@@ -28,5 +28,5 @@ spec:
         volumes:
           - name: data-mysql-volume
             nfs:
-              server: "10.102.79.113" 
+              server: "10.110.27.58" 
               path: "/mysql/"
