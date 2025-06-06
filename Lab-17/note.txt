@@ -1,0 +1,39 @@
+# on worker1
+
+systemctl status kubelet
+cat /usr/lib/systemd/system/kubelet.service.d/10-kubeadm.conf
+cat /var/lib/kubelet/config.yaml
+cat /var/lib/kubelet/config.yaml | grep staticPodPath
+
+mkdir -p /etc/kubernetes/manifests/
+cat <<EOF >/etc/kubernetes/manifests/static-webapp.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: webapp-color
+spec:
+  containers:
+  - image: mmumshad/simple-webapp-color
+    name: simple-webapp-color
+    ports:
+    - containerPort: 8080
+      protocol: TCP
+      env:
+      - name: APP_COLOR
+        value: blue
+EOF
+
+# on master
+kubectl get pods
+kubectl delete po static-web-worker1
+
+kubectl get pods
+
+curl <webapp-color-pod-IP>:<containerPort>
+
+
+# on worker1
+rm -f /etc/kubernetes/manifests/static-web.yaml
+
+# on master 
+kubectl get pods
