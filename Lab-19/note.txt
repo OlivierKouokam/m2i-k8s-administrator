@@ -21,5 +21,14 @@ ssh -L 8001:127.0.0.1:8001 vagrant@192.168.99.10
 # http://127.0.0.1:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
 
 
+# TO AUTHORIZE DASHBOARD ACCESS with dashboard.m2iformation.fr
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout dashboard.key -out dashboard.crt -subj "/CN=dashboard.m2iformation.fr/O=dashboard"
+
+kubectl -n kubernetes-dashboard create secret tls dashboard-tls --key dashboard.key --cert dashboard.crt
+
+# get external IP of ingress-nginx-controller service loadbalancer 
+# update hosts file with : 192.168.99.150 dashboard.m2iformation.fr
+# Open "dashboard.m2iformation.fr" in the browser
+
 kubectl delete -f .
 kubectl delete -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
