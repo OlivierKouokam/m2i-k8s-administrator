@@ -1,0 +1,38 @@
+# On master, use vagrant user
+kubectl get po
+
+1- Creating Kubernetes User
+
+mkdir -p  ~/.kube/users
+cd ~/.kube/users
+
+openssl genrsa -out olivier.key 2048
+
+openssl req -new -key olivier.key -out olivier.csr -subj "/CN=olivier/O=devops/O=m2iformation.fr"
+
+sudo openssl x509 -req -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -days 730 -in olivier.csr -out olivier.crt
+
+2- Setting up User configs with kubectl
+
+kubectl config set-credentials olivier --client-certificate=/home/aism2i/.kube/users/kim.crt --client-key=/home/aism2i/.kube/users/olivier.key
+
+cat ~/.kube/config
+
+kubectl config get-contexts
+
+kubectl config set-context olivier-kubernetes --cluster=kubernetes  --user=olivier --namespace=odoo
+cat ../config
+ 
+kubectl config view
+kubectl config use-context olivier-kubernetes
+kubectl get po
+kubectl config set-cluster kubernetes --server=https://192.168.99.10:6443 --certificate-authority=/etc/kubernetes/pki/ca.crt
+kubectl get po
+
+# On master, use root account
+
+kubectl apply -f readonly-role.yaml
+kubectl apply -f readonly-rolebinding.yml
+
+# On master, use vagrant user
+kubectl get po

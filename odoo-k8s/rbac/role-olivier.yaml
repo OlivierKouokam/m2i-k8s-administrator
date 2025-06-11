@@ -1,0 +1,10 @@
+# rbac/role-olivier.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: odoo
+  name: odoo-full-access
+rules:
+  - apiGroups: ["*"]
+    resources: ["*"]
+    verbs: ["*"]
